@@ -8,22 +8,13 @@ option for milk box container, option for transperent box.
 import json
 import random
 import database as db
-def geting_detailes_from_user():
-    """ need to be replace with GUI for gether info from user.
+
+""" need to be replace with GUI for gether info from user.
     add item button 
     field for entering all user input
     dropdown menu for location
     option for details about item.
      """
-    item_name = input("item name:")
-    quantity = input("quantity:")
-    row_location = input("row location:")
-    line_location = input("line location:")
-    details = input("details:")
-    description = input("description:")
-    class_name_str = item(item_name,quantity,row_location,line_location,details,description)
-    print(type(class_name_str))
-    return class_name_str
 
 class item:
     _item_name:str
@@ -33,25 +24,28 @@ class item:
     _details:str
     _item_description:str
     
+    def input_from_user(self):
+        self._item_name = input("item name:")
+        self._item_id = random.randrange(1,1000,1)
+        self._item_quantity = input("quantity:")
+        self._item_location["row"] = input("row location:")
+        self._item_location["line"] = input("line location:")
+        self._details = input("details:")
+        self._item_description = input("description:")
+        
     def GetItem(self):
         itemDict = {"name":self._item_name,"id":self._item_id,"quantity":self._item_quantity,
                     "location_row":self._item_location["row"],"location_line":self._item_location["line"],
                     "details":self._details,"description":self._item_description}
         return itemDict
         
-    def __init__(self,item_name,item_quantity,item_row_location,item_line_location,details,item_description):
-        self._item_name = item_name
-        self._item_id = random.randrange(1,1000,1)
-        self._item_quantity = item_quantity
-        self._item_location["row"] = item_row_location
-        self._item_location["line"] = item_line_location
-        self._details = details
-        self._item_description = item_description
-    
-    def AddItem(self):
-        print("add item")
-        pass
+    def __init__(self):
+        self.input_from_user()
+        
 
+    def AddItem(self):
+        db.start(self.GetItem())
+    
     def DeleteItem(self,item):
         pass
 
@@ -75,9 +69,6 @@ class item:
         return str_to_json
 def print_all_items():
     print(db.LoadingJsonFile())
-def add_item():
-    my_item = geting_detailes_from_user()
-    db.start(my_item.GetItem())
 def menu():
     print("Home Storage management tool")
     print("1) View all items.")
@@ -97,7 +88,8 @@ def menu_choices():
             print_all_items()
             break
         elif user_choice == "2":
-            add_item()
+            my_item = item()
+            my_item.AddItem()
             break
         elif user_choice == "3":
             pass
